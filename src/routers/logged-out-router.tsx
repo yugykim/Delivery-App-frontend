@@ -2,15 +2,20 @@ import React from "react"
 import { useForm } from "react-hook-form";
 import { isLoggedInVar } from "../apollo"
 
+
+interface IForm {
+  email: string;
+  password: string;
+}
 export const LoggedOutRouter = () => {
-  const { register, watch, handleSubmit, formState: { errors }} = useForm();
+  const { register, watch, handleSubmit, formState: { errors }} = useForm<IForm>();
   const onSubmit = () => {
+    console.log("test");
     console.log(watch());
   }
   const onInvalid = () => {
     console.log("can't create account");
   }
-  console.log(errors);
   return (
     <div>
       <h1>Log Out</h1>
@@ -27,6 +32,8 @@ export const LoggedOutRouter = () => {
             placeholder="email"
             type= "email"
           />
+          {errors.email?.message && ( <span className="font-bold text-red-600">{errors.email?.message}</span> )}
+          {errors.email?.type === "pattern" && ( <span className="font-bold text-red-600">Only gamil allowed</span> )}
         </div>
         <div>
           <input

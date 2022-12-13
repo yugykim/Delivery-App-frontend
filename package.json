@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.7.1",
+    "@graphql-codegen/cli": "^2.16.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -19,16 +20,20 @@
     "react-hook-form": "^7.39.3",
     "react-router-dom": "6.4",
     "react-scripts": "5.0.1",
-    "typescript": "^4.8.4",
+    "typescript": "^4.9.4",
     "vscode-css-languageservice": "^6.2.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "tailwind:build": "npx tailwindcss-cli@latest build -i src/styles/tailwind.css -o src/styles/style.css",
+    "tailwind:prodbuild": "NODE_ENV=production npm run tailwind:build",
+    "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
     "start": "npm run tailwind:build & react-scripts start",
-    "build": "react-scripts build",
+    "generate": "graphql-codegen",
+    "build": "CI=false react-scripts build",
+    "prebuild": "npm run tailwind:build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "apollo:codegen": "apollo client:codegen src/__generated__ --target=typescript --outputFlat"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +52,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "2.16.1",
+    "@graphql-codegen/client-preset": "^1.2.3",
+    "@graphql-codegen/introspection": "2.2.3",
+    "@graphql-codegen/typescript": "^2.8.5",
+    "@graphql-codegen/typescript-operations": "^2.5.10"
   }
 }

@@ -28,13 +28,13 @@
   "scripts": {
     "tailwind:prodbuild": "NODE_ENV=production npm run tailwind:build",
     "tailwind:build": "tailwind build ./src/styles/tailwind.css -o ./src/styles/styles.css",
-    "start": "npm run tailwind:build & react-scripts start",
+    "start": "npm run codegen & npm run tailwind:build & react-scripts start",
     "generate": "graphql-codegen",
     "build": "CI=false react-scripts build",
     "prebuild": "npm run tailwind:build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "apollo:codegen": "rm -rf src/__generated__ && apollo client:codegen src/__generated__ --target=typescript"
+    "codegen": "graphql-codegen --config codegen.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -56,7 +56,7 @@
   },
   "devDependencies": {
     "@graphql-codegen/cli": "2.16.1",
-    "@graphql-codegen/client-preset": "^1.2.3",
+    "@graphql-codegen/client-preset": "1.2.3",
     "@graphql-codegen/introspection": "2.2.3",
     "@graphql-codegen/typescript": "^2.8.5",
     "@graphql-codegen/typescript-operations": "^2.5.10"

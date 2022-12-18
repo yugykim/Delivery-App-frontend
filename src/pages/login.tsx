@@ -1,6 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
 import React from "react"
+import Helmet from "react-helmet"
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { Button } from "../components/button";
 import { FormError } from "../components/form-error";
 import { LoginInput, LoginOutput } from '../gql/graphql'
 import nuberLogo from "../imges/logo.svg"
@@ -14,6 +17,7 @@ const LOGIN_MUTATION = gql`
     }
   }
 `;
+
 interface ILoginForm {
   email: string;
   password: string
@@ -21,7 +25,9 @@ interface ILoginForm {
 }
 
 export const Login = () => {
-  const { register, getValues, watch, formState: { errors }, handleSubmit } = useForm<ILoginForm>(); 
+  const { register, getValues, watch, formState: { errors, isValid }, handleSubmit } = useForm<ILoginForm>({
+    mode: "onBlur"
+  }); 
   //to protect mutation, need type 
   const onCompleted = (data: LoginOutput) => {
     const { ok, token } = data;
@@ -46,10 +52,13 @@ export const Login = () => {
   };
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+      <Helmet>
+        <title>Login | Uber eat</title>
+      </Helmet>
       <div className="w-full max-w-screen-sm flex-col px-5 items-center">
         <img src={nuberLogo} className="w-52 mb-10" />
         <h4 className="w-full text-left text-3xl mb-5 font-medium">Welcome Back</h4>
-        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 w-full">
+        <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 w-full mb-5">
           <input 
             {...register("email", {
               required: true,
@@ -78,16 +87,14 @@ export const Login = () => {
           {errors.password?.type === "minLength" && (
             <FormError errorMessage="Password must be more than 10 chars." />
           )}
-          <button 
-          className=
-            "mt-3 text-lg font-medium text-white py-4 bg-green-600 hover:bg-green-700 transition-colors"
-          >
-            {loading ? "Loading..." : "Log In"}
-          </button>
+          <Button canClick={isValid} loading={loading} actionText={"Log In"}/>
           {loginMutationResult?.error && (
             <FormError errorMessage={loginMutationResult.error} />
           )}
         </form>
+        <div>
+          New to Uber? <Link to="/signup" className=" text-lime-600 hover:underline">Create an Account</Link>
+        </div>
       </div>
     </div>
   );

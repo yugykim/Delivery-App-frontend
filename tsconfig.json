@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-, "apollo.config.js"  ]
+  ]
 }

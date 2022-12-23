@@ -1,6 +1,10 @@
 import React from "react"
-import { BrowserRouter as Router, createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
-import { Login } from "../pages/login";
+import { isLoggedInVar } from "../apollo";
 
 
-export const LoggedOutRouter = () => {};
+export const LoggedOutRouter = () => {
+  <div>
+    <h1>Logged In</h1>
+    <button onClick={() => isLoggedInVar(false)}>Log Out</button>
+  </div>
+};

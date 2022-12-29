@@ -13,11 +13,18 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel-plugin for production.
  */
 const documents = {
+    "\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n": types.MeQueryDocument,
     "\n  mutation createAccount($createAccountInput: createAccountInput!) {\n    createAccount(input: $createAccountInput) {\n      ok\n      error\n    }\n  }\n": types.CreateAccountDocument,
     "\n  mutation login($loginInput: LoginInput!) {\n    login(input: $loginInput) {\n      ok\n      token\n      error\n    }\n  }\n": types.LoginDocument,
-    "\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n": types.MeQueryDocument,
+    "\n  mutation verifyEmail($input: VerifyEmailInputput!){\n    verifyEmail(input: $input) {\n      ok\n      error\n    }\n  }\n": types.VerifyEmailDocument,
+    "\n  mutation editprofile($input: EditProfileInput!){\n    editProfile(input:$input) {\n      ok\n      error\n    }\n  }\n": types.EditprofileDocument,
+    "\n            fragment EditUser on User {\n              verified\n              email\n            }\n          ": types.EditUserFragmentDoc,
 };
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"): (typeof documents)["\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -29,7 +36,15 @@ export function graphql(source: "\n  mutation login($loginInput: LoginInput!) {\
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"): (typeof documents)["\n  query meQuery {\n    me {\n      id\n      email\n      role\n      verified\n    }\n  }\n"];
+export function graphql(source: "\n  mutation verifyEmail($input: VerifyEmailInputput!){\n    verifyEmail(input: $input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation verifyEmail($input: VerifyEmailInputput!){\n    verifyEmail(input: $input) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation editprofile($input: EditProfileInput!){\n    editProfile(input:$input) {\n      ok\n      error\n    }\n  }\n"): (typeof documents)["\n  mutation editprofile($input: EditProfileInput!){\n    editProfile(input:$input) {\n      ok\n      error\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n            fragment EditUser on User {\n              verified\n              email\n            }\n          "): (typeof documents)["\n            fragment EditUser on User {\n              verified\n              email\n            }\n          "];
 
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.

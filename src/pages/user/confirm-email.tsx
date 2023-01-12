@@ -17,13 +17,23 @@ const VERIFY_EMAIL_MUTATION = gql`
 
 
 export const ConfirmEmail = () => {
-  const { data: userData, refetch } = useMe();
+  const { data: userData } = useMe();
   const client = useApolloClient(); //apollo hook
   const navigate = useNavigate();
   const onCompleted = async (data: verifyEmail) => {
     const { ok } = data;
     if ( ok && userData?.me.id ) {
-      await refetch();
+      client.writeFragment({
+        id: `User:${userData.me.id}`,
+        fragment: gql`
+          fragment VerifiedUser on User {
+            verified
+          }
+        `,
+        data: {
+          verified: true,
+        },
+      });
       navigate(-1);
     };
   };
@@ -41,7 +51,7 @@ export const ConfirmEmail = () => {
           },
         },
       });
-  }, []);
+  }, [verifiyEmail]);
 
   return (
     <div className=' mt-52 flex flex-col items-center justify-center'>

@@ -1,4 +1,12 @@
+import React from "react";
 import { Link } from "react-router-dom";
+
+interface IRestaurantProps {
+  id: string;
+  coverImg: string;
+  name: string;
+  categoryName?: string;
+}
 
 export const Restaurant: React.FC<IRestaurantProps> = ({
   id,

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 export const Restaurant: React.FC<IRestaurantProps> = ({
   id,

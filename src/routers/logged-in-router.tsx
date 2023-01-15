@@ -1,6 +1,6 @@
 import React from "react"
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { Restaurants } from "../pages/client/restaurants";
+import { Restaurant } from "../pages/client/restaurants";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { ConfirmEmail } from "../pages/user/confirm-email";

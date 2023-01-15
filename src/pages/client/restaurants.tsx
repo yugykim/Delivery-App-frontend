@@ -51,41 +51,40 @@ export const Restaurant = () => {
       </form>
       <div>
         {!loading && ( 
-          <div className='max-w-screen-2xl mx-auto mt-8'>
+          <><div className='max-w-screen-2xl mx-auto mt-8'>
             <div className='flex justify-around max-w-sm mx-auto'>
               {data?.allCategories.categories?.map(category => (
                 <div className='flex flex-col items-center cursor-pointer'>
-                  <div className='w-14 h-14 bg-cover hover:bg-gray-200 rounded-full' style={{backgroundImage: `url(${category.coverImg})`}}></div>
-                  <span className='mt-1 text-sm text-center font-medium'>{ category.name }</span>
+                  <div className='w-14 h-14 bg-cover hover:bg-gray-200 rounded-full' style={{ backgroundImage: `url(${category.coverImg})` }}></div>
+                  <span className='mt-1 text-sm text-center font-medium'>{category.name}</span>
                 </div>
               ))}
             </div>
-          </div>
-          <div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
-            {page > 1 ? (
-              <button
-                onClick={onPrevPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &larr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-            <span>
-              Page {page} of {data?.restaurants.totalPages}
-            </span>
-            {page !== data?.restaurants.totalPages ? (
-              <button
-                onClick={onNextPageClick}
-                className="focus:outline-none font-medium text-2xl"
-              >
-                &rarr;
-              </button>
-            ) : (
-              <div></div>
-            )}
-          </div>
+          </div><div className="grid grid-cols-3 text-center max-w-md items-center mx-auto mt-10">
+              {page > 1 ? (
+                <button
+                  onClick={onPrevPageClick}
+                  className="focus:outline-none font-medium text-2xl"
+                >
+                  &larr;
+                </button>
+              ) : (
+                <div></div>
+              )}
+              <span>
+                Page {page} of {data?.restaurants.totalPages}
+              </span>
+              {page !== data?.restaurants.totalPages ? (
+                <button
+                  onClick={onNextPageClick}
+                  className="focus:outline-none font-medium text-2xl"
+                >
+                  &rarr;
+                </button>
+              ) : (
+                <div></div>
+              )}
+            </div></>
         </div>
       )}
     </div>

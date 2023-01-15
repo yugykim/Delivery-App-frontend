@@ -39,7 +39,7 @@ export type Category = {
 
 export type CategoryInput = {
   page?: InputMaybe<Scalars['Int']>;
-  slug: Scalars['String'];
+  slug?: Scalars['String'];
 };
 
 export type CategoryOutput = {

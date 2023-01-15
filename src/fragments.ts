@@ -12,3 +12,13 @@ import { gql } from "@apollo/client";
      isPromoted
    }
  `;
+
+ export const CATEGORY_FRAGMENT = gql`
+   fragment CategoryParts on Category {
+      id
+      name
+      coverImage
+      slug
+      restaurantCount
+   }
+ `;

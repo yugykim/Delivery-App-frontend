@@ -2,9 +2,9 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { client } from './apollo';
-import App from './App';
 import './styles/styles.css'
 import { HelmetProvider } from 'react-helmet-async';
+import { App } from './components/app';
 
 
 const root = ReactDOM.createRoot(

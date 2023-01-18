@@ -2,9 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { RESTAURANT_FRAGMENT } from '../../fragments';
 import { gql, useQuery } from '@apollo/client';
-import { restaurantsPageQuery } from '../../gql/restaurantsPageQuery';
 import { restaurant, restaurantVariables } from '../../gql/restaurant';
-import { parseCommandLine } from 'typescript';
 
 const RESTAURANT_QUERY = gql`
   query restaurant($input: RestaurantInput!) {

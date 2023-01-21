@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom';
 
 export const Header:React.FC = () => {
   const { data } = useMe(); //go to cache, avoid passing props
+  console.log(data);
   return (
     <>
       {!data?.me.verified && (

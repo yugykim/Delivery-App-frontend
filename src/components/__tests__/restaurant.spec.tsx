@@ -7,19 +7,20 @@ describe("<Restaurant />", () => {
   it("renders OK with props", () => {
     const restaurantProps = {
       id: "1",
-      name: "name",
+      name: "nametest",
       categoryName: "categoryName",
       coverImg: "lala",
     };
     const { debug, getByText, container } = render(
       <Router>
-        <Restaurant id="1" coverImg="x" name="nameTest" categoryName="CatName" />
+        <Restaurant {...restaurantProps} />
       </Router>
     )
-    // eslint-disable-next-line testing-library/no-debugging-utils
-    debug();
-    screen.getByText("nameTest");
-    screen.getByText("catTest");
-    expect(container.firstChild).toHaveAttribute("href", "/restaurants/1")
+    screen.getByText(restaurantProps.name);
+    screen.getByText(restaurantProps.categoryName);
+    expect(screen.getByRole('link')).toHaveAttribute(
+      "href",
+      `/restaurants/${restaurantProps.id}`
+    );
   })
 })

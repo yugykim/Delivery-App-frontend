@@ -9,7 +9,7 @@ import { UserRole } from '../gql/graphql'
 import nuberLogo from "../imges/logo.svg"
 import { createAccountMutation, createAccountMutationVariables } from "../gql/createAccountMutation";
 
-const CREATE_ACCOUNT_MUTATION = gql`
+export const CREATE_ACCOUNT_MUTATION = gql`
   mutation createAccount($createAccountInput: createAccountInput!) {
     createAccount(input: $createAccountInput) {
       ok

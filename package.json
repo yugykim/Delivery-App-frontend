@@ -63,6 +63,7 @@
     "@graphql-codegen/introspection": "2.2.3",
     "@graphql-codegen/typescript": "^2.8.5",
     "@graphql-codegen/typescript-operations": "^2.5.10",
+    "@testing-library/cypress": "^9.0.0",
     "@testing-library/dom": "^8.20.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/user-event": "^14.4.3",

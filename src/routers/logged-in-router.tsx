@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import { Header } from "../components/header";
 import { useMe } from "../hooks/useMe";
 import { ConfirmEmail } from "../pages/user/confirm-email";
@@ -22,11 +22,12 @@ const ClientRoutes = [
 
 export const LoggedInRouter = () => {
   const {data, loading, error} = useMe(); //go to cache
+  console.log(data?.me.role);
   if ( loading || error || !data) {
     return <div className="h-screen flex justify-center items-center">
       <span className="font-medium text-xl tracking-wide">Loading...</span>
     </div>
-  }
+  } 
   return (
     <Router>
       <Header />

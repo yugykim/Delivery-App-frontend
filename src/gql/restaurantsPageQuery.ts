@@ -4,7 +4,7 @@ export interface restaurantsPageQuery_allCategories_categories {
   __typename: "Category";
   id: number;
   name: string;
-  coverImg: string | null;
+  coverImage: string | null;
   slug: string;
   restaurantCount: number;
 }
@@ -25,10 +25,10 @@ export interface restaurantsPageQuery_restaurants_results {
   __typename: "Restaurant";
   id: number;
   name: string;
-  coverImg: string;
+  coverImage: string;
   category: restaurantsPageQuery_restaurants_results_category | null;
   address: string;
-  isPromoted: boolean;
+  IsPromoted: boolean;
 }
 
 export interface restaurantsPageQuery_restaurants {

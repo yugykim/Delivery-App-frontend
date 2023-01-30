@@ -1,3 +1,5 @@
+/** @format */
+
 /// <reference types="cypress" />
 // ***********************************************
 // This example commands.ts shows you how to
@@ -36,4 +38,38 @@
 //   }
 // }
 
-import "@testing-library/cypress/add-commands";
+import '@testing-library/cypress/add-commands';
+
+declare global {
+	namespace Cypress {
+		interface Chainable {
+			assertLoggedIn(): void;
+			assertLoggedOut(): void;
+			login(email: string, password: string): void;
+		}
+	}
+}
+
+beforeEach(() => {
+	cy.window().then((win) => win.sessionStorage.clear());
+	cy.clearCookies();
+	cy.clearLocalStorage();
+});
+
+Cypress.Commands.add('assertLoggedIn', () => {
+	cy.window().its('localStorage.uber-toekn').should('be.a', 'string');
+});
+
+Cypress.Commands.add('assertLoggedOut', () => {
+	cy.window().its('localStorage.uber-toekn').should('be.n', 'string');
+});
+
+Cypress.Commands.add('login', (email, password) => {
+	cy.visit('/');
+	cy.findByPlaceholderText(/email/i).type(email);
+	cy.findByPlaceholderText(/password/i).type(password);
+	cy.findByRole('button')
+		.should('not.have.class', 'pointer-events-none')
+		.click();
+	cy.assertLoggedIn();
+});

@@ -29,7 +29,7 @@ export const Restaurant = () => {
   });
   return (
     <div>
-      <div className='bg-gray-800 bg-center py-48 bg-cover ' style={{backgroundImage: `url(${data?.restaurant.restaurant?.coverImg})`}}>
+      <div className='bg-gray-800 bg-center py-48 bg-cover ' style={{backgroundImage: `url(${data?.restaurant.restaurant?.coverImage})`}}>
         <div className=' bg-white w-3/12 py-4 pl-48'>
           <h4 className='text-4xl mb-2'>{ data?.restaurant.restaurant?.name }</h4>
           <h5 className='text-sm font-light mb-2'>{ data?.restaurant.restaurant?.category?.name }</h5>

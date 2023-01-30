@@ -7,10 +7,10 @@ export interface myRestaurants_myRestaurants_restaurants {
   __typename: "Restaurant";
   id: number;
   name: string;
-  coverImg: string;
+  coverImage: string;
   category: myRestaurants_myRestaurants_restaurants_category | null;
   address: string;
-  isPromoted: boolean;
+  IsPromoted: boolean;
 }
 
 export interface myRestaurants_myRestaurants {

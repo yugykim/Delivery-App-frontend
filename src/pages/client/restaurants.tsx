@@ -8,13 +8,13 @@ import { Helmet } from 'react-helmet';
 import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
 
 const RESTAURANTS_QUERY = gql`
-  query restaurantsPageQuery($input: RestaurantsInput) {
+  query restaurantsPageQuery($input: RestaurantsInput!) {
     allCategories {
-      okP
+      ok
       error
       categories {
         ...CategoryParts
-      }P
+      }
     }
     restaurants(input: $input) {
       ok
@@ -74,13 +74,13 @@ export const Restaurants = () => {
                 <Restaurant 
                   key={restaurant.id}
                   id={restaurant.id+""}
-                  coverImg={restaurant.coverImg} 
+                  coverImage={restaurant.coverImage} 
                   name={restaurant.name} 
                   categoryName={restaurant.category?.name} 
                 />
               ))}
             </div>
-            <div className='grid grid-cols-3 text-center max-w-md items-center max-auto mt-10'>
+            <div className='grid grid-cols-3 tㅁext-center max-w-md items-center max-auto mt-10'>
               {page > 1 ? ( <button onClick={onPrevPageClick} className=' focus:outline-none font-medium text-2xl'>&larr;</button> ) : <div></div>}
               <span>Page {page} of {data?.restaurants.totalPages}</span>
               {page !== data?.restaurants.totalPages ? ( <button onClick={onNextPageClick} className=' focus:outline-none font-medium text-2xl'>&rarr;</button> ) : <div></div>}

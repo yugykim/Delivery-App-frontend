@@ -31,7 +31,7 @@ export const Login = () => {
   //to protect mutation, need type 
   const onCompleted = (data: loginMutation) => {
     const { ok, token } = data.login;
-   
+    console.log("data login"+ data.login);
     if (ok && token) {
       localStorage.setItem(LOCAL_STORAGE_TOKEN, token);
       authToken(token);
@@ -44,6 +44,7 @@ export const Login = () => {
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();
+      console.log(getValues());
       login({
         variables: {
           loginInput: {
@@ -102,7 +103,7 @@ export const Login = () => {
           )}
         </form>
         <div>
-          New to Uber? <Link to="/signup" className=" text-lime-600 hover:underline">Create an Account</Link>
+          New to Uber? <Link to="/create-account" className=" text-lime-600 hover:underline">Create an Account</Link>
         </div>
       </div>
     </div>

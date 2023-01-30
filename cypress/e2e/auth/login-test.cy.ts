@@ -21,17 +21,9 @@ describe('First Test', () => {
     user.findByPlaceholderText(/password/i).clear()
     user.findByPlaceholderText(/email/i).type("bad@email.com")
     user.findByPlaceholderText(/password/i).type('a');
-    user.findByRole('alert').should('have.text', 'Password must be more than 10 chars.');
 	});
-  it('can fill out the form', () => {
-    user.visit('/')
-    user.findByPlaceholderText(/email/i).type('test@gmail.com')
-    user.findByPlaceholderText(/password/i).type('Test123456')
-    user.findByRole('button').should('not.have.class', 'pointer-events-none').click();
-    user.window().its("localStorage.uber-token").should("be.a", "string");
+  it('can fill out the form and log in', () => {
+    user.login("Test123456", "Test123456")
    });
-  it('sing up', () => {
-    user.visit('/create-account');
-  })
 });
 

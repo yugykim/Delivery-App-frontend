@@ -4,12 +4,12 @@ import { gql } from "@apollo/client";
    fragment RestaurantParts on Restaurant {
      id
      name
-     coverImg
+     coverImage
      category {
        name
      }
      address
-     isPromoted
+     IsPromoted
    }
  `;
 

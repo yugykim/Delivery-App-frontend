@@ -36,7 +36,6 @@ export const SignUp = () => {
     console.log("complete");
     if (ok) {
       //redirect login page
-      alert("Account Created! Log in now!");
       navigate(-1);
     } else {
       console.log("error");
@@ -55,7 +54,7 @@ export const SignUp = () => {
           createAccountInput: {
             email, 
             password, 
-            role,
+            role
           },
         },
       })

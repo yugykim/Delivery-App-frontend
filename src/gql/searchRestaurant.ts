@@ -9,10 +9,10 @@ export interface searchRestaurant_searchRestaurant_restaurants {
   __typename: "Restaurant";
   id: number;
   name: string;
-  coverImg: string;
+  coverImage: string;
   category: searchRestaurant_searchRestaurant_restaurants_category | null;
   address: string;
-  isPromoted: boolean;
+  IsPromoted: boolean;
 }
 
 export interface searchRestaurant_searchRestaurant {

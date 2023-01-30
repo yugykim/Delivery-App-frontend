@@ -32,10 +32,10 @@ export interface restaurant_restaurant_restaurant {
   __typename: "Restaurant";
   id: number;
   name: string;
-  coverImg: string;
+  coverImage: string;
   category: restaurant_restaurant_restaurant_category | null;
   address: string;
-  isPromoted: boolean;
+  IsPromoted: boolean;
   menu: restaurant_restaurant_restaurant_menu[];
 }
 

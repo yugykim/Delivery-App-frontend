@@ -9,17 +9,17 @@ export interface category_category_restaurants {
   __typename: "Restaurant";
   id: number;
   name: string;
-  coverImg: string;
+  coverImage: string;
   category: category_category_restaurants_category | null;
   address: string;
-  isPromoted: boolean;
+  IsPromoted: boolean;
 }
 
 export interface category_category_category {
   __typename: "Category";
   id: number;
   name: string;
-  coverImg: string | null;
+  coverImage: string | null;
   slug: string;
   restaurantCount: number;
 }

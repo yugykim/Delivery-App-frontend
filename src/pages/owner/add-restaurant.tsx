@@ -35,9 +35,25 @@ export const AddRestaurant = () => {
 		getValues,
 		handleSubmit,
 		formState: { errors, isValid },
-	} = useForm<IFormProps>();
-	const onSubmit = () => {
-		console.log(getValues());
+	} = useForm<IFormProps>({
+    mode: 'onChange'
+  });
+	const onSubmit = async () => {
+    try {
+      const { file } = getValues();
+      const actualfile = file[0];
+      const formBody = new FormData();
+      formBody.append('file', actualfile);
+      const request = await (
+        await fetch('http://localhost:4000/uploads/', {
+        method: "POST",
+        body: formBody
+      })
+      ).json();
+      console.log(request);
+    } catch (error) {
+      console.log(error);
+    }
 	};
 	return (
 		<div className='"container flex flex-col items-center mt-52"'>

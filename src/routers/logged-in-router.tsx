@@ -17,7 +17,7 @@ import { Category } from '../pages/client/category';
 import { Restaurant } from '../pages/client/restaurant';
 import { NotFound } from '../pages/404';
 import { MyRestaurants } from '../pages/owner/my-restaurants';
-import { AddRestaurant } from '../pages/owner/add-restaurant';
+import { AddRestaurants } from '../pages/owner/add-restaurants';
 
 const clientRoutes = [
 	{
@@ -51,18 +51,18 @@ const commonRoutes = [
 
 const restaurantRoutes = [
 	{
-		path: '/my-restaurants',
+		path: '/',
 		component: <MyRestaurants />,
 	},
-  {
+	{
 		path: '/add-restaurant',
-		component: <AddRestaurant />,
+		component: <AddRestaurants />,
 	},
 ];
 
 export const LoggedInRouter = () => {
 	const { data, loading, error } = useMe(); //go to cache
-	
+
 	if (loading || error || !data) {
 		return (
 			<div className='h-screen flex justify-center items-center'>
@@ -78,16 +78,14 @@ export const LoggedInRouter = () => {
 					<Route
 						key={route.path}
 						path={route.path}
-            element={route.component}>
-					</Route>
+						element={route.component}></Route>
 				))}
 				{data.me.role === 'Customer' &&
 					clientRoutes.map((route) => (
 						<Route
 							key={route.path}
 							path={route.path}
-              element={route.component}>
-						</Route>
+							element={route.component}></Route>
 					))}
 				{data.me.role === 'Owner' &&
 					restaurantRoutes.map((route) => (
@@ -96,6 +94,7 @@ export const LoggedInRouter = () => {
 							path={route.path}
 							element={route.component}></Route>
 					))}
+        <Route path='*' element={<NotFound />}/>
 			</Routes>
 		</Router>
 	);

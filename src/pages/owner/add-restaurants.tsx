@@ -1,6 +1,6 @@
 /** @format */
 
-import { gql, useMutation } from '@apollo/client';
+import { gql, useApolloClient, useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import {
 	createRestaurant,
@@ -10,12 +10,15 @@ import { useForm } from 'react-hook-form';
 import { Button } from '../../components/button';
 import { FormError } from '../../components/form-error';
 import { Helmet } from 'react-helmet-async';
+import { MY_RESTAURANTS_QUERY } from './my-restaurants';
+import { useNavigate } from 'react-router-dom';
 
 const CREATE_RESTAURANT_MUTATION = gql`
 	mutation createRestaurant($input: createRestaurantInput!) {
 		createRestaurant(input: $input) {
 			error
 			ok
+			restaurantId
 		}
 	}
 `;
@@ -27,13 +30,44 @@ interface IFormProps {
 	file: FileList;
 }
 
-export const AddRestaurant = () => {
+export const AddRestaurants = () => {
+	const client = useApolloClient();
+  const navigate = useNavigate();
+  const [imageUrl, setImageUrl] = useState("ß");
+	//get the current restaurants cache
 	const onCompleted = (data: createRestaurant) => {
 		const {
-			createRestaurant: { ok, error },
+			createRestaurant: { ok, restaurantId },
 		} = data;
 		if (ok) {
+			const { name, categoryName, address } = getValues();
 			setUploading(false);
+			const queryResult = client.readQuery({ query: MY_RESTAURANTS_QUERY });
+			client.writeQuery({
+				query: MY_RESTAURANTS_QUERY,
+				data: {
+					myRestaurants: {
+						...queryResult?.myRestaurant, //same data in the cache
+						restaurants: [
+							{
+								IsPromoted: false,
+								__typename: 'Restaurant',
+								address,
+								category: {
+                  name: categoryName,
+                  __typename: 'Category',
+                  __photo__: Object
+                },
+								coverImage: imageUrl,
+								id: restaurantId,
+								name,
+							},
+							...queryResult.myRestaurant.restaurants,
+						],
+					},
+				},
+			});
+      navigate('/');
 		}
 	};
 	const [createRestaurantMutation, { data }] = useMutation<
@@ -41,6 +75,7 @@ export const AddRestaurant = () => {
 		createRestaurantVariables
 	>(CREATE_RESTAURANT_MUTATION, {
 		onCompleted,
+		refetchQueries: [{ query: MY_RESTAURANTS_QUERY }], //get all restaurants, interact with cache directly
 	});
 	const {
 		register,
@@ -65,7 +100,7 @@ export const AddRestaurant = () => {
 				})
 			).json();
 
-			console.log(typeof file);
+			setImageUrl(coverImage);
 			createRestaurantMutation({
 				variables: {
 					input: {

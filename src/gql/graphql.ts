@@ -573,7 +573,6 @@ export type CreateRestaurantInput = {
   categoryName: Scalars['String'];
   coverImage: Scalars['String'];
   name: Scalars['String'];
-  restaurantID: Scalars['Float'];
 };
 
 export type CreateRestaurantOutput = {

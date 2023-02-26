@@ -460,6 +460,10 @@ export type RestaurantInput = {
   restaurantId: Scalars['Float'];
 };
 
+export type MyRestaurantInput = {
+  id: Scalars['Int'];
+};
+
 export type RestaurantOutput = {
   __typename?: 'RestaurantOutput';
   error?: Maybe<Scalars['String']>;

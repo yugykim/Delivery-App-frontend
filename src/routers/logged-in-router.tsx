@@ -18,6 +18,7 @@ import { Restaurant } from '../pages/client/restaurant';
 import { NotFound } from '../pages/404';
 import { MyRestaurants } from '../pages/owner/my-restaurants';
 import { AddRestaurants } from '../pages/owner/add-restaurants';
+import { MyRestaurant } from '../pages/owner/my-restaurant';
 
 const clientRoutes = [
 	{
@@ -57,6 +58,10 @@ const restaurantRoutes = [
 	{
 		path: '/add-restaurant',
 		component: <AddRestaurants />,
+	},
+  {
+		path: '/restaurants/:id',
+		component: <MyRestaurant />,
 	},
 ];
 

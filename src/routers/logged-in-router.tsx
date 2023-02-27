@@ -19,6 +19,7 @@ import { NotFound } from '../pages/404';
 import { MyRestaurants } from '../pages/owner/my-restaurants';
 import { AddRestaurants } from '../pages/owner/add-restaurants';
 import { MyRestaurant } from '../pages/owner/my-restaurant';
+import { AddDish } from '../pages/owner/add-dish';
 
 const clientRoutes = [
 	{
@@ -59,9 +60,13 @@ const restaurantRoutes = [
 		path: '/add-restaurant',
 		component: <AddRestaurants />,
 	},
-  {
+	{
 		path: '/restaurants/:id',
 		component: <MyRestaurant />,
+	},
+  {
+		path: '/restaurants/:restaurantId/add-dish',
+		component: <AddDish />,
 	},
 ];
 
@@ -99,7 +104,10 @@ export const LoggedInRouter = () => {
 							path={route.path}
 							element={route.component}></Route>
 					))}
-        <Route path='*' element={<NotFound />}/>
+				<Route
+					path='*'
+					element={<NotFound />}
+				/>
 			</Routes>
 		</Router>
 	);

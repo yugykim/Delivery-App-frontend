@@ -59,7 +59,7 @@ export const Login = () => {
   return (
     <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
       <Helmet>
-        <title>Login | Uber eat</title>
+        <title>Login | Here You Go</title>
       </Helmet>
       <div className="w-full max-w-screen-sm flex-col px-5 items-center">
         <img src={nuberLogo} className="w-52 mb-10" />

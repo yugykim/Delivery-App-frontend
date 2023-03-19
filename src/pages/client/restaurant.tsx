@@ -1,12 +1,8 @@
 /** @format */
 
-import React, { useState } from 'react';
+import React, { useState, Children } from 'react';
 import { useParams } from 'react-router-dom';
-import {
-	CATEGORY_FRAGMENT,
-	DISH_FRAGMENT,
-	RESTAURANT_FRAGMENT,
-} from '../../fragments';
+import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
 import { gql, useQuery } from '@apollo/client';
 import { restaurant, restaurantVariables } from '../../gql/restaurant';
 import { Dish } from '../../components/dish';
@@ -31,12 +27,12 @@ const RESTAURANT_QUERY = gql`
 `;
 
 const CREATE_ORDER_MUTATION = gql`
-  mutation createOrder($input: CreateOrderInput!) {
-    createOrder(input: $input) {
-      ok
-      error
-    }
-  }
+	mutation createOrder($input: CreateOrderInput!) {
+		createOrder(input: $input) {
+			ok
+			error
+		}
+	}
 `;
 
 export const Restaurant = () => {
@@ -57,13 +53,60 @@ export const Restaurant = () => {
 	const triggerStartOrder = () => {
 		setOrderStarted(true);
 	};
+	const getItem = (dishId: number) => {
+		return orderDishes.find((order) => order.dishId === dishId);
+	};
+	const isSelected = (dishId: number) => {
+		return Boolean(getItem(dishId));
+	};
 	const addItemOrder = (dishId: number) => {
-    setOrderDishes((current) => [{dishId, options: null}])
-  }
+		if (isSelected(dishId)) {
+			return;
+		}
+		setOrderDishes((current) => [{ dishId, options: [] }, ...current]);
+	};
+	const removeFromOrder = (dishId: number) => {
+		setOrderDishes((current) =>
+			current.filter((dish) => dish.dishId !== dishId)
+		);
+	};
+
+	const addOptionToItem = (dishId: number, option: any) => {
+		if (!isSelected(dishId)) {
+			return;
+		}
+		const oldItem = getItem(dishId);
+		if (oldItem) {
+			const hasOption = Boolean(
+				oldItem.options?.find((aOption) => aOption.name === option.name)
+			);
+			if (!hasOption) {
+				removeFromOrder(dishId); //removing order
+				setOrderDishes((current) => [
+					{ dishId, options: [option, ...oldItem.options!] },
+					...current,
+				]); // setorderitems again
+			}
+		}
+	};
+	const getOptionFromItem = (
+		item: CreateOrderItemInput,
+		optionName: string
+	) => {
+		return item.options?.find((option) => option.name === optionName);
+	};
+	const isOptionSelected = (dishId: number, optionName: string) => {
+		const item = getItem(dishId);
+		if (item) {
+			return Boolean(getOptionFromItem(item, optionName));
+		}
+	};
+	console.log(orderDishes);
+
 	return (
 		<div>
 			<Helmet>
-				<title>{data?.restaurant.restaurant?.name || ''} | Uber eat</title>
+				<title>{data?.restaurant.restaurant?.name || ''} | Here You Go</title>
 			</Helmet>
 			<div
 				className=' bg-gray-800 bg-center bg-cover py-48'
@@ -84,12 +127,13 @@ export const Restaurant = () => {
 				<button
 					onClick={triggerStartOrder}
 					className='btn px-10'>
-					Start order
+					{orderStarted ? 'Ordering' : 'Start order'}
 				</button>
 				<div className='w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
 					{data?.restaurant.restaurant?.menu.map((dish, index) => (
 						<Dish
-              id={dish.id}
+							isSelected={isSelected(dish.id)}
+							id={dish.id}
 							orderStarted={orderStarted}
 							key={index}
 							name={dish.name}
@@ -97,8 +141,29 @@ export const Restaurant = () => {
 							price={dish.price}
 							isCustomer={true}
 							options={dish.options}
-              addDishesToOrder={addItemOrder}
-						/>
+							addDishesToOrder={addItemOrder}
+							removeFromOrder={removeFromOrder}>
+							{dish.options?.map((options, index) => (
+								<span
+									onClick={() =>
+										addOptionToItem
+											? addOptionToItem(dish.id, {
+													name: options.name,
+													extra: options.extra,
+											  })
+											: null
+									}
+									className={`flex border items-center ${
+										isOptionSelected(dish.id, options.name)
+											? 'border-gray-800'
+											: ''
+									}`}
+									key={index}>
+									<h6 className='mr-2'>{options.name}</h6>
+									<h6 className='text-sm opacity-75'>(${options.extra})</h6>
+								</span>
+							))}
+						</Dish>
 					))}
 				</div>
 			</div>

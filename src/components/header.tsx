@@ -11,14 +11,14 @@ export const Header:React.FC = () => {
   console.log(data);
   return (
     <>
-      {!data?.me.verified && (
+{/*       {!data?.me.verified && (
         <div className="bg-red-500 p-3 text-center text-xs">
           <span role={"alert"}>Please verify your email.</span>  
         </div>
-      )}
-      <header className='py-4'>
+      )} */}
+      <header className='py-4 bg-rose-600'>
         <div className='w-full px-5 xl:px-0 max-w-screen-2xl mx-auto  items-center flex justify-between'>
-          <img src={logo} className='w-24' alt='Nuber Eats'/>
+          <h1 className='w-24 font-bold'>Here You Go</h1>
           <span className='text-xs'>
             <Link to='/edit-profile'>
               <FontAwesomeIcon icon={faUser} className='text-xl'/>

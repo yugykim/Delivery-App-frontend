@@ -119,7 +119,7 @@ export const AddRestaurants = () => {
 	return (
 		<div className='"container flex flex-col items-center mt-52"'>
 			<Helmet>
-				<title>Add Restaurant | Uber eat</title>
+				<title>Add Restaurant | Here You Go</title>
 			</Helmet>
 			<h4 className='font-semibold text-2xl mb-3'>Add Restaurant</h4>
 			<form

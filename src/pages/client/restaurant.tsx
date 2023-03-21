@@ -1,13 +1,15 @@
 /** @format */
 
-import React, { useState, Children } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import { restaurant, restaurantVariables } from '../../gql/restaurant';
 import { Dish } from '../../components/dish';
 import { Helmet } from 'react-helmet-async';
 import { CreateOrderItemInput } from '../../gql/graphql';
+import { DishOption } from '../../components/dish-option';
+import { createOrder, createOrderVariables } from '../../gql/createOrder';
 
 const RESTAURANT_QUERY = gql`
 	query restaurant($input: RestaurantInput!) {
@@ -31,6 +33,7 @@ const CREATE_ORDER_MUTATION = gql`
 		createOrder(input: $input) {
 			ok
 			error
+      orderId
 		}
 	}
 `;
@@ -50,40 +53,63 @@ export const Restaurant = () => {
 	);
 	const [orderStarted, setOrderStarted] = useState(false);
 	const [orderDishes, setOrderDishes] = useState<CreateOrderItemInput[]>([]);
+
 	const triggerStartOrder = () => {
 		setOrderStarted(true);
 	};
+
 	const getItem = (dishId: number) => {
 		return orderDishes.find((order) => order.dishId === dishId);
 	};
+
 	const isSelected = (dishId: number) => {
 		return Boolean(getItem(dishId));
 	};
+
 	const addItemOrder = (dishId: number) => {
 		if (isSelected(dishId)) {
 			return;
 		}
 		setOrderDishes((current) => [{ dishId, options: [] }, ...current]);
 	};
+
 	const removeFromOrder = (dishId: number) => {
 		setOrderDishes((current) =>
 			current.filter((dish) => dish.dishId !== dishId)
 		);
 	};
 
-	const addOptionToItem = (dishId: number, option: any) => {
+	const removeOptionFromItem = (dishId: number, optionName: string) => {
+		//
+		const oldItem = getItem(dishId);
+		if (oldItem) {
+			removeFromOrder(dishId); //removing order
+			setOrderDishes((current) => [
+				//add item
+				{
+					dishId,
+					options: oldItem.options?.filter(
+						(option) => option.name !== optionName //only have options name is not name of the options
+					),
+				},
+				...current,
+			]);
+		}
+	};
+
+	const addOptionToItem = (dishId: number, optionName: string) => {
 		if (!isSelected(dishId)) {
 			return;
 		}
 		const oldItem = getItem(dishId);
 		if (oldItem) {
 			const hasOption = Boolean(
-				oldItem.options?.find((aOption) => aOption.name === option.name)
+				oldItem.options?.find((aOption) => aOption.name === optionName)
 			);
 			if (!hasOption) {
 				removeFromOrder(dishId); //removing order
 				setOrderDishes((current) => [
-					{ dishId, options: [option, ...oldItem.options!] },
+					{ dishId, options: [{ name: optionName }, ...oldItem.options!] },
 					...current,
 				]); // setorderitems again
 			}
@@ -95,13 +121,53 @@ export const Restaurant = () => {
 	) => {
 		return item.options?.find((option) => option.name === optionName);
 	};
+
 	const isOptionSelected = (dishId: number, optionName: string) => {
 		const item = getItem(dishId);
 		if (item) {
 			return Boolean(getOptionFromItem(item, optionName));
 		}
+		return false;
 	};
-	console.log(orderDishes);
+
+	const triggerCancleOrder = () => {
+		setOrderStarted(false);
+		setOrderDishes([]);
+	};
+  const navigate = useNavigate();
+  //creating order mutation
+  const onCompleted = (data: createOrder) => {
+    const { createOrder: {ok, orderId}} = data;
+    if (data.createOrder.ok) {
+      navigate(`orders/${orderId}`);
+    }
+    
+  }
+	const [createOrderMutation, { loading: placingOrder }] = useMutation<
+		createOrder,
+		createOrderVariables
+	>(CREATE_ORDER_MUTATION, {
+    onCompleted,
+  });
+
+	const triggerConfirmOrder = () => {
+		if (orderDishes.length === 0) {
+			alert("Can't place empty order");
+			return;
+		}
+
+		const ok = window.confirm('You are about to place an order');
+		if (ok) {
+			createOrderMutation({
+				variables: {
+					input: {
+						restaurantID: +id,
+						items: orderDishes,
+					},
+				},
+			});
+		}
+	};
 
 	return (
 		<div>
@@ -124,11 +190,27 @@ export const Restaurant = () => {
 				</div>
 			</div>
 			<div className='container pb-32 flex flex-col items-end mt-20'>
-				<button
-					onClick={triggerStartOrder}
-					className='btn px-10'>
-					{orderStarted ? 'Ordering' : 'Start order'}
-				</button>
+				{!orderStarted && (
+					<button
+						onClick={triggerStartOrder}
+						className='btn px-10'>
+						Start Order
+					</button>
+				)}
+				{orderStarted && (
+					<div className='flex items-center'>
+						<button
+							onClick={triggerConfirmOrder}
+							className='btn px-10 mr-3'>
+							Confirm Order
+						</button>
+						<button
+							onClick={triggerCancleOrder}
+							className='btn px-10 bg-black hover:bg-black'>
+							Cancle Order
+						</button>
+					</div>
+				)}
 				<div className='w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
 					{data?.restaurant.restaurant?.menu.map((dish, index) => (
 						<Dish
@@ -143,26 +225,19 @@ export const Restaurant = () => {
 							options={dish.options}
 							addDishesToOrder={addItemOrder}
 							removeFromOrder={removeFromOrder}>
-							{dish.options?.map((options, index) => (
-								<span
-									onClick={() =>
-										addOptionToItem
-											? addOptionToItem(dish.id, {
-													name: options.name,
-													extra: options.extra,
-											  })
-											: null
-									}
-									className={`flex border items-center ${
-										isOptionSelected(dish.id, options.name)
-											? 'border-gray-800'
-											: ''
-									}`}
-									key={index}>
-									<h6 className='mr-2'>{options.name}</h6>
-									<h6 className='text-sm opacity-75'>(${options.extra})</h6>
-								</span>
-							))}
+							<div>
+								{dish.options?.map((option, index) => (
+									<DishOption
+										key={index}
+										isSelected={isOptionSelected(dish.id, option.name)}
+										extra={option.extra}
+										name={option.name}
+										dishId={dish.id}
+										addOptionToItem={addOptionToItem}
+										removeOptionFromItem={removeOptionFromItem}
+									/>
+								))}
+							</div>
 						</Dish>
 					))}
 				</div>

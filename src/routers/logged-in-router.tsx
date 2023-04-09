@@ -1,12 +1,7 @@
 /** @format */
 
 import React from 'react';
-import {
-	BrowserRouter as Router,
-	Route,
-	Routes,
-	useNavigate,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Header } from '../components/header';
 import { useMe } from '../hooks/useMe';
 import { ConfirmEmail } from '../pages/user/confirm-email';
@@ -20,6 +15,9 @@ import { MyRestaurants } from '../pages/owner/my-restaurants';
 import { AddRestaurants } from '../pages/owner/add-restaurants';
 import { MyRestaurant } from '../pages/owner/my-restaurant';
 import { AddDish } from '../pages/owner/add-dish';
+import { Order } from '../pages/order';
+import { Dashboard } from '../pages/driver/dashboard';
+import { UserRole } from '../gql/graphql';
 
 const clientRoutes = [
 	{
@@ -46,6 +44,10 @@ const commonRoutes = [
 		component: <ConfirmEmail />,
 	},
 	{
+		path: '/orders/:id',
+		component: <Order />,
+	},
+	{
 		path: '/edit-profile',
 		component: <EditProfile />,
 	},
@@ -64,9 +66,16 @@ const restaurantRoutes = [
 		path: '/restaurants/:id',
 		component: <MyRestaurant />,
 	},
-  {
+	{
 		path: '/restaurants/:restaurantId/add-dish',
 		component: <AddDish />,
+	},
+];
+
+const driverRoutes = [
+	{
+		path: '/',
+		component: <Dashboard />,
 	},
 ];
 
@@ -90,15 +99,22 @@ export const LoggedInRouter = () => {
 						path={route.path}
 						element={route.component}></Route>
 				))}
-				{data.me.role === 'Customer' &&
+				{data.me.role === UserRole.Customer &&
 					clientRoutes.map((route) => (
 						<Route
 							key={route.path}
 							path={route.path}
 							element={route.component}></Route>
 					))}
-				{data.me.role === 'Owner' &&
+				{data.me.role === UserRole.Owner &&
 					restaurantRoutes.map((route) => (
+						<Route
+							key={route.path}
+							path={route.path}
+							element={route.component}></Route>
+					))}
+				{data.me.role === UserRole.Delivery &&
+					driverRoutes.map((route) => (
 						<Route
 							key={route.path}
 							path={route.path}

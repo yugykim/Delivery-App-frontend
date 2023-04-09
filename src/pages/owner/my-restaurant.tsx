@@ -1,13 +1,14 @@
 /** @format */
 
-import { gql, useQuery } from '@apollo/client';
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { DISH_FRAGMENT, ORDERS_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
+import { gql, useQuery, useSubscription } from '@apollo/client';
+import React, { useEffect } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { DISH_FRAGMENT, FULL_ORDER_FRAGMENT, ORDERS_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
 import { myRestaurant, myRestaurantVariables } from '../../gql/myRestaurant';
 import { Dish } from '../../components/dish';
 import { VictoryAxis, VictoryChart, VictoryLabel, VictoryLine, VictoryTheme, VictoryTooltip, VictoryVoronoiContainer } from 'victory';
 import { useMe } from '../../hooks/useMe';
+import { pendingOrders } from '../../gql/pendingOrders';
 
 const MY_RESTAURANT_QUERY = gql`
 	query myRestaurant($input: MyRestaurantInput!) {
@@ -30,11 +31,21 @@ const MY_RESTAURANT_QUERY = gql`
   ${ORDERS_FRAGMENT}
 `;
 
+const PENDING_ORDERS_SUBSCRIPTION = gql`
+  subscription pendingOrders {
+    pendingOrders {
+      ...FullOrderParts
+    }
+  }
+  ${FULL_ORDER_FRAGMENT}
+`;
+
 interface IParams {
 	id: string | undefined;
 }
 
 export const MyRestaurant = () => {
+  const navigate = useNavigate();
 	const { id } = useParams();
 	const { data } = useQuery<myRestaurant, myRestaurantVariables>(
 		MY_RESTAURANT_QUERY,
@@ -47,7 +58,12 @@ export const MyRestaurant = () => {
 		}
 	);
 
-  console.log(data);
+  const { data: subscriptionData } = useSubscription<pendingOrders>(PENDING_ORDERS_SUBSCRIPTION);
+  useEffect(() => {
+    if (subscriptionData?.pendingOrders.id) {
+      navigate(`/order/${subscriptionData?.pendingOrders.id}`)
+    }
+  }, [subscriptionData])
 	return (
 		<div>
 			<div

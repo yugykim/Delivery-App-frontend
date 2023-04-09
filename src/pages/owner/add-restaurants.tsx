@@ -33,7 +33,7 @@ interface IFormProps {
 export const AddRestaurants = () => {
 	const client = useApolloClient();
   const navigate = useNavigate();
-  const [imageUrl, setImageUrl] = useState("ß");
+  const [imageUrl, setImageUrl] = useState("");
 	//get the current restaurants cache
 	const onCompleted = (data: createRestaurant) => {
 		const {

@@ -13,7 +13,7 @@ describe("<Restaurant />", () => {
     };
     const { debug, getByText, container } = render(
       <Router>
-        <Restaurant {...restaurantProps} />
+        <Restaurant coverImage={""} {...restaurantProps} />
       </Router>
     )
     screen.getByText(restaurantProps.name);

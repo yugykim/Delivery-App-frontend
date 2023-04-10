@@ -2,12 +2,11 @@
 
 import { gql, useQuery, useSubscription } from '@apollo/client';
 import React, { useEffect } from 'react';
-import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { DISH_FRAGMENT, FULL_ORDER_FRAGMENT, ORDERS_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
 import { myRestaurant, myRestaurantVariables } from '../../gql/myRestaurant';
 import { Dish } from '../../components/dish';
 import { VictoryAxis, VictoryChart, VictoryLabel, VictoryLine, VictoryTheme, VictoryTooltip, VictoryVoronoiContainer } from 'victory';
-import { useMe } from '../../hooks/useMe';
 import { pendingOrders } from '../../gql/pendingOrders';
 
 const MY_RESTAURANT_QUERY = gql`
@@ -60,8 +59,9 @@ export const MyRestaurant = () => {
 
   const { data: subscriptionData } = useSubscription<pendingOrders>(PENDING_ORDERS_SUBSCRIPTION);
   useEffect(() => {
+    console.log(subscriptionData);
     if (subscriptionData?.pendingOrders.id) {
-      navigate(`/order/${subscriptionData?.pendingOrders.id}`)
+      navigate(`/orders/${subscriptionData?.pendingOrders.id}`)
     }
   }, [subscriptionData])
 	return (

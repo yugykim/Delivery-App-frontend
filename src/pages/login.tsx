@@ -31,7 +31,6 @@ export const Login = () => {
   //to protect mutation, need type 
   const onCompleted = (data: loginMutation) => {
     const { ok, token } = data.login;
-    console.log("data login"+ data.login);
     if (ok && token) {
       localStorage.setItem(LOCAL_STORAGE_TOKEN, token);
       authToken(token);

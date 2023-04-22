@@ -20,7 +20,7 @@ export interface searchRestaurant_searchRestaurant {
   ok: boolean;
   error: string | null;
   totalPages: number | null;
-  totalResults: number | null;
+  totalResult: number | null;
   restaurants: searchRestaurant_searchRestaurant_restaurants[] | null;
 }
 

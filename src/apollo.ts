@@ -12,15 +12,14 @@ export const authToken = makeVar(token); //null -> begining
 
 //subscription
 const wsLink = new GraphQLWsLink(createClient({
-
-  url: process.env.NODE_ENV === 'production'? 'ws://uber-eats-backend.herokuapp.com/graphql':'ws://localhost:4000/graphql',
+  url: 'http://localhost:4000/graphql',
   connectionParams: {
     'x-jwt': authToken() || "", 
   },
 }));
 
 const httpLink = createHttpLink({
-  uri: process.env.NODE_ENV === 'production'? 'ws://uber-eats-backend.herokuapp.com/graphql':'ws://localhost:4000/graphql',
+  uri: 'http://localhost:4000/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

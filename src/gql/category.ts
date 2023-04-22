@@ -29,7 +29,7 @@ export interface category_category {
   ok: boolean;
   error: string | null;
   totalPages: number | null;
-  totalResults: number | null;
+  totalResult: number | null;
   restaurants: category_category_restaurants[] | null;
   category: category_category_category | null;
 }

@@ -11,6 +11,7 @@ import { Restaurant } from '../../components/restaurant';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { CATEGORY_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
+import { Category } from '../../components/category';
 
 const RESTAURANTS_QUERY = gql`
 	query restaurantsPageQuery($input: RestaurantsInput!) {
@@ -39,7 +40,7 @@ interface IFormProps {
 	searchTerm: string;
 }
 
-const imageLink = 'https://www.yogiyo.co.kr/mobile/image/bg-top.png?v=1';
+const imageLink = 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NHx8Zm9vZHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=900&q=60';
 export const Restaurants = () => {
 	const [page, setPage] = useState(1);
 	const { data, loading, error } = useQuery<
@@ -83,25 +84,15 @@ export const Restaurants = () => {
 			<div>
 				{!loading && (
 					<div className='max-w-screen-2xl mx-auto mt-8 pb-20'>
-						<div className='flex justify-around max-w-sm mx-auto'>
-							{data?.allCategories.categories?.map((category) => (
-								<Link to={`/category/${category.slug}`}>\</Link>
-							))}  
-						</div>
 						<div className='flex flex-wrap justify-center mt-16'>
-            <div className='basis-1/4 m-2 bg-red-300'>ddddd</div>
-            <div className='basis-1/4 m-2 bg-red-300'>ddd</div>
-            <div className='basis-1/4 m-2 bg-red-300'>dd</div>
-            <div className='basis-1/4 m-2 bg-red-300'>ddd</div>
-							{data?.restaurants.results?.map((restaurant) => (
-								<div className='basis-1/4 m-2 bg-red-300'>
-									<Restaurant
-										key={restaurant.id}
-										id={restaurant.id + ''}
-										coverImage={restaurant.coverImage}
-										name={restaurant.name}
-										categoryName={restaurant.category?.name}
-									/>
+							{data?.allCategories.categories?.map((category) => (
+								<div className='basis-1/4 m-2 border'>
+                  <Category 
+                    key={category.id}
+                    coverImage={category.coverImage}
+                    slug={category.slug}
+                    name={category.name}
+                  />
 								</div>
 							))}
 						</div>

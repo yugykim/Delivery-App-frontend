@@ -36,7 +36,7 @@ export interface restaurantsPageQuery_restaurants {
   ok: boolean;
   error: string | null;
   totalPages: number | null;
-  totalResults: number | null;
+  totalResult: number | null;
   results: restaurantsPageQuery_restaurants_results[] | null;
 }
 

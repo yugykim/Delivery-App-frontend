@@ -35,7 +35,7 @@ export const Login = () => {
       localStorage.setItem(LOCAL_STORAGE_TOKEN, token);
       authToken(token);
       isLoggedInVar(true);
-    } 
+    };
   };
   const [login, { data: loginMutationResult, loading }] = useMutation<loginMutation, loginMutationVariables>(LOGIN_MUTATION, {
     onCompleted,
@@ -43,7 +43,6 @@ export const Login = () => {
   const onSubmit = () => {
     if (!loading) {
       const { email, password } = getValues();
-      console.log(getValues());
       login({
         variables: {
           loginInput: {
@@ -56,13 +55,13 @@ export const Login = () => {
   };
 
   return (
-    <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+    <div className="h-screen bg-rose-600 flex items-center flex-col justify-center">
       <Helmet>
         <title>Login | Here You Go</title>
       </Helmet>
-      <div className="w-full max-w-screen-sm flex-col px-5 items-center">
-        <img src={nuberLogo} className="w-52 mb-10" />
-        <h4 className="w-full text-left text-3xl mb-5 font-medium">Welcome Back</h4>
+      <div className="w-full max-w-screen-sm flex-col px-5 items-center mb-10">
+        <h1 className="w-full font-bold text-5xl text-white mb-5">HERE YU GO</h1>
+        <h4 className="w-full text-left text-3xl mb-5 font-medium text-orange-500">Welcome Back</h4>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 w-full mb-5">
           <input 
             {...register("email", {
@@ -102,7 +101,7 @@ export const Login = () => {
           )}
         </form>
         <div>
-          New to Uber? <Link to="/create-account" className=" text-lime-600 hover:underline">Create an Account</Link>
+          New to HERE YU GO? <Link to="/create-account" className=" text-orange-500 hover:underline">Create an Account</Link>
         </div>
       </div>
     </div>

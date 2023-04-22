@@ -18,7 +18,6 @@ const CREATE_RESTAURANT_MUTATION = gql`
 		createRestaurant(input: $input) {
 			error
 			ok
-			restaurantId
 		}
 	}
 `;
@@ -94,13 +93,15 @@ export const AddRestaurants = () => {
 			const formBody = new FormData();
 			formBody.append('file', actualFile);
 			const { url: coverImage } = await (
-				await fetch('http://localhost:4000/uploads/', {
+				await fetch('http://localhost:4000/uploads', {
 					method: 'POST',
 					body: formBody,
 				})
 			).json();
 
 			setImageUrl(coverImage);
+      console.log(name);
+      console.log(categoryName);
 			createRestaurantMutation({
 				variables: {
 					input: {

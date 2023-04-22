@@ -12,6 +12,9 @@ import { SignUp } from '../pages/create-account';
 import { NotFound } from '../pages/404';
 import { Restaurants } from '../pages/client/restaurants';
 import { Header } from '../components/header';
+import { Category } from '../pages/client/category';
+import { Search } from '../pages/client/search';
+import { Restaurant } from '../pages/client/restaurant';
 
 export const LoggedOutRouter = () => {
 	return (
@@ -26,10 +29,22 @@ export const LoggedOutRouter = () => {
 					path='/login'
 					element={<Login />}
 				/>
+        <Route 
+          path='/search'
+          element={<Search />}
+        />
 				<Route
 					path='/'
 					element={<Restaurants />}
 				/>
+        <Route 
+          path='/restaurants/:id'
+          element={<Restaurant />}
+        />
+        <Route 
+          path='category/:slug'
+          element={<Category />}
+        />
 				<Route
 					path='*'
 					element={<NotFound />}

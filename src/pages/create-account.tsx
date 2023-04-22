@@ -61,13 +61,12 @@ export const SignUp = () => {
     }
   };
   return (
-    <div className="h-screen flex items-center flex-col mt-10 lg:mt-28">
+    <div className="h-screen bg-rose-600 flex items-center flex-col justify-center">
       <Helmet>
         <title>Create Account | Here You Go</title>
       </Helmet>
-      <div className="w-full max-w-screen-sm flex-col px-5 items-center">
-        <img src={nuberLogo} className="w-52 mb-10" />
-        <h4 className="w-full text-left text-3xl mb-5 font-medium">Let's get started</h4>
+      <div className="w-full max-w-screen-sm flex-col px-5 items-center mb-10">
+        <h4 className="w-full text-left text-3xl mb-5 font-medium text-orange-500">Let's get started</h4>
         <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3 mt-5 w-full mb-5">
           <input 
             {...register("email", {
@@ -108,7 +107,7 @@ export const SignUp = () => {
           {createAccountMutationResult?.createAccount.error && <FormError errorMessage={createAccountMutationResult.createAccount.error} />}
         </form>
         <div>
-          Already have an account?{" "}<Link to="/" className=" text-lime-600 hover:underline">Log in now</Link>
+          Already have an account?{" "}<Link to="/" className=" text-orange-500 hover:underline">Log in now</Link>
         </div>
       </div>
     </div>

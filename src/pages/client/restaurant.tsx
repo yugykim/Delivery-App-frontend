@@ -3,13 +3,14 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DISH_FRAGMENT, RESTAURANT_FRAGMENT } from '../../fragments';
-import { gql, useMutation, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { restaurant, restaurantVariables } from '../../gql/restaurant';
 import { Dish } from '../../components/dish';
 import { Helmet } from 'react-helmet-async';
 import { CreateOrderItemInput } from '../../gql/graphql';
 import { DishOption } from '../../components/dish-option';
 import { createOrder, createOrderVariables } from '../../gql/createOrder';
+import { isLoggedInVar } from '../../apollo';
 
 const RESTAURANT_QUERY = gql`
 	query restaurant($input: RestaurantInput!) {
@@ -33,12 +34,13 @@ const CREATE_ORDER_MUTATION = gql`
 		createOrder(input: $input) {
 			ok
 			error
-      orderId
+			orderId
 		}
 	}
 `;
 
 export const Restaurant = () => {
+	const isLoggedIn = useReactiveVar(isLoggedInVar);
 	const params = useParams();
 	const id = params.id!;
 	const { loading, data } = useQuery<restaurant, restaurantVariables>(
@@ -134,27 +136,28 @@ export const Restaurant = () => {
 		setOrderStarted(false);
 		setOrderDishes([]);
 	};
-  const navigate = useNavigate();
-  //creating order mutation
-  const onCompleted = (data: createOrder) => {
-    const { createOrder: {ok, orderId}} = data;
-    if (data.createOrder.ok) {
-      navigate(`/orders/${orderId}`);
-    }
-    
-  }
+	const navigate = useNavigate();
+	//creating order mutation
+	const onCompleted = (data: createOrder) => {
+		const {
+			createOrder: { ok, orderId },
+		} = data;
+		if (data.createOrder.ok) {
+			navigate(`/orders/${orderId}`);
+		}
+	};
 	const [createOrderMutation, { loading: placingOrder }] = useMutation<
 		createOrder,
 		createOrderVariables
 	>(CREATE_ORDER_MUTATION, {
-    onCompleted,
-  });
+		onCompleted,
+	});
 
 	const triggerConfirmOrder = () => {
-    console.log(placingOrder);
-    if (placingOrder) {
-      return;
-    }
+		console.log(placingOrder);
+		if (placingOrder) {
+			return;
+		}
 		if (orderDishes.length === 0) {
 			alert("Can't place empty order");
 			return;
@@ -192,59 +195,95 @@ export const Restaurant = () => {
 					</h6>
 				</div>
 			</div>
-			<div className='container pb-32 flex flex-col items-end mt-20'>
-				{!orderStarted && (
-					<button
-						onClick={triggerStartOrder}
-						className='btn px-10'>
-						Start Order
-					</button>
-				)}
-				{orderStarted && (
-					<div className='flex items-center'>
+			{isLoggedIn ? (
+				<div className='container pb-32 flex flex-col items-end mt-20'>
+					{!orderStarted && (
 						<button
-							onClick={triggerConfirmOrder}
-							className='btn px-10 mr-3'>
-							Confirm Order
+							onClick={triggerStartOrder}
+							className='btn px-10'>
+							Start Order
 						</button>
-						<button
-							onClick={triggerCancleOrder}
-							className='btn px-10 bg-black hover:bg-black'>
-							Cancle Order
-						</button>
+					)}
+					{orderStarted && (
+						<div className='flex items-center'>
+							<button
+								onClick={triggerConfirmOrder}
+								className='btn px-10 mr-3'>
+								Confirm Order
+							</button>
+							<button
+								onClick={triggerCancleOrder}
+								className='btn px-10 bg-black hover:bg-black'>
+								Cancle Order
+							</button>
+						</div>
+					)}
+					<div className='w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
+						{data?.restaurant.restaurant?.menu.map((dish, index) => (
+							<Dish
+								isSelected={isSelected(dish.id)}
+								id={dish.id}
+								orderStarted={orderStarted}
+								key={index}
+								name={dish.name}
+								description={dish.description}
+								price={dish.price}
+								isCustomer={true}
+								options={dish.options}
+								addDishesToOrder={addItemOrder}
+								removeFromOrder={removeFromOrder}>
+								<div>
+									{dish.options?.map((option, index) => (
+										<DishOption
+											key={index}
+											isSelected={isOptionSelected(dish.id, option.name)}
+											extra={option.extra}
+											name={option.name}
+											dishId={dish.id}
+											addOptionToItem={addOptionToItem}
+											removeOptionFromItem={removeOptionFromItem}
+										/>
+									))}
+								</div>
+							</Dish>
+						))}
 					</div>
-				)}
-				<div className='w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
-					{data?.restaurant.restaurant?.menu.map((dish, index) => (
-						<Dish
-							isSelected={isSelected(dish.id)}
-							id={dish.id}
-							orderStarted={orderStarted}
-							key={index}
-							name={dish.name}
-							description={dish.description}
-							price={dish.price}
-							isCustomer={true}
-							options={dish.options}
-							addDishesToOrder={addItemOrder}
-							removeFromOrder={removeFromOrder}>
-							<div>
-								{dish.options?.map((option, index) => (
-									<DishOption
-										key={index}
-										isSelected={isOptionSelected(dish.id, option.name)}
-										extra={option.extra}
-										name={option.name}
-										dishId={dish.id}
-										addOptionToItem={addOptionToItem}
-										removeOptionFromItem={removeOptionFromItem}
-									/>
-								))}
-							</div>
-						</Dish>
-					))}
 				</div>
-			</div>
+			) : (
+				<>
+					<div className='w-full bg-black text-white p-10 text-center text-xl'>you need to log in to order food</div>
+					<div className='w-full grid mt-16 md:grid-cols-3 gap-x-5 gap-y-10'>
+						{data?.restaurant.restaurant?.menu.map((dish, index) => (
+							<Dish
+								isSelected={isSelected(dish.id)}
+								id={dish.id}
+								orderStarted={orderStarted}
+								key={index}
+								name={dish.name}
+								description={dish.description}
+								price={dish.price}
+								isCustomer={true}
+								options={dish.options}
+								addDishesToOrder={addItemOrder}
+								removeFromOrder={removeFromOrder}>
+								<div>
+									{dish.options?.map((option, index) => (
+										<DishOption
+											key={index}
+											isSelected={isOptionSelected(dish.id, option.name)}
+											extra={option.extra}
+											name={option.name}
+											dishId={dish.id}
+											addOptionToItem={addOptionToItem}
+											removeOptionFromItem={removeOptionFromItem}
+										/>
+									))}
+								</div>
+							</Dish>
+						))}
+					</div>
+				</>
+			)}
 		</div>
 	);
 };
